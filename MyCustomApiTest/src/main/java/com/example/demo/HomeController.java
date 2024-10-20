@@ -11,7 +11,7 @@ public class HomeController {
 		return "Welcome User regis";
 	}
 	
-	@PostMapping("/showmessage")
+	@PostMapping("/action")
 	public String docker() {
 		return "Welcome docker build successfule regis";
 	}
