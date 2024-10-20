@@ -36,4 +36,4 @@ jobs:
 
       # Verify the Docker image (Optional)
       - name: Docker image digest
-        run: echo "Image digest: ${{ steps.docker_build.outputs.digest }}"
+        run:  "echo Image digest: ${{ steps.docker_build.outputs.digest }}"
