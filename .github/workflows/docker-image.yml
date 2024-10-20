@@ -32,8 +32,7 @@ jobs:
           context: .
           push: true
           tags: 
-                rexmyapp/mycustomrepo:latest
-                rexmyapp/mycustomrepo:${{ github.sha }}
+                rexmyapp/mycustomrepo
 
       # Verify the Docker image (Optional)
       - name: Docker image digest
