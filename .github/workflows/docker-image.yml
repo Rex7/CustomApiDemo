@@ -30,7 +30,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: ./MyCustomApiTest
-          file: ./MyCustomApitest/Dockerfile
+          file: ./MyCustomApiTest/Dockerfile
           push: true
           tags: 
                 rexmyapp/mycustomrepo
