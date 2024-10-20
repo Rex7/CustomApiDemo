@@ -29,7 +29,8 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
-          context: .
+          context: ./MyCustomApiTest
+          file: ./MyCustomApitest/Dockerfile
           push: true
           tags: 
                 rexmyapp/mycustomrepo
