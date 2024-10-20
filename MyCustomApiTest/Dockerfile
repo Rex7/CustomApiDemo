@@ -1,21 +1,24 @@
-# Start with a base image containing Java runtime
-FROM openjdk:17-jdk-alpine
+# Use a Maven image to build the application
+FROM maven:3.8.4-openjdk-17 AS build
 
-# Add Maintainer Info
-LABEL maintainer="regischarles7@gmail.com"
+# Set the working directory
+WORKDIR /app
 
-# Add a volume pointing to /tmp
-VOLUME /tmp
+# Copy the pom.xml and install dependencies
+COPY pom.xml .
+COPY src ./src
 
-# Make port 8080 available to the world outside this container
-EXPOSE 8080
+# Package the application
+RUN mvn clean package
 
-# The application's jar file
+# Use a lightweight image to run the application
+FROM openjdk:11-jre-slim
 
-ARG JAR_FILE=target/MyCustomApiTest-0.0.1-SNAPSHOT.jar
+# Set the working directory
+WORKDIR /app
 
-# Add the application's jar to the container
-ADD ${JAR_FILE} app.jar
+# Copy the built JAR file from the previous stage
+COPY --from=build /app/target/*.jar app.jar
 
-# Run the jar file
-ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
+# Run the application
+ENTRYPOINT ["java", "-jar", "app.jar"]
