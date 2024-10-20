@@ -1,21 +1,40 @@
-# Start with a base image containing Java runtime
-FROM openjdk:17-jdk-alpine
+name: Docker Image CI
 
-# Add Maintainer Info
-LABEL maintainer="regischarles7@gmail.com"
+on:
+  push:
+    branches:
+      - main  # Triggers on push to the main branch
 
-# Add a volume pointing to /tmp
-VOLUME /tmp
+jobs:
+  build:
+    runs-on: ubuntu-latest
 
-# Make port 8080 available to the world outside this container
-EXPOSE 8080
+    steps:
+      # Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-# The application's jar file
+      # Set up Docker
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
 
-ARG JAR_FILE=target/MyCustomApiTest-0.0.1-SNAPSHOT.jar
+      # Log in to Docker Hub
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
-# Add the application's jar to the container
-ADD ${JAR_FILE} app.jar
+      # Build and push Docker image
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          tags: 
+                rexmyapp/mycustomrepo:latest
+                rexmyapp/mycustomrepo:${{ github.sha }}
 
-# Run the jar file
-ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
+      # Verify the Docker image (Optional)
+      - name: Docker image digest
+        run: echo "Image digest: ${{ steps.docker_build.outputs.digest }}"
