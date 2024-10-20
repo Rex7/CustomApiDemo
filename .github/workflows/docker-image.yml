@@ -3,7 +3,7 @@ name: Docker Image CI
 on:
   push:
     branches:
-      - main  # Triggers on push to the main branch
+      - master  # Triggers on push to the main branch
 
 jobs:
   build:
